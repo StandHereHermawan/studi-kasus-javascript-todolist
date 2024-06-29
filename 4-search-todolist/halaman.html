@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TodoList, Studi Kasus</title>
+    </head>
+    <body>
+        <!-- form[name=toDoForm]>(table>(tbody>(tr>(td>label[for=todo]{Todo : })+(td>input[type=text][id=todo][name=todo]))+(tr>td+td>input[type=submit][value=Add]))) -->
+        <form name="toDoForm">
+            <table>
+                <tbody>
+                    <tr>
+                        <td><label for="todo">Todo : </label></td>
+                        <td><input type="text" id="todo" name="todo" /></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Add" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+
+        <h1>TodoList</h1>
+        <!-- table>(thead>tr>(th{Filter : })+(th>input[type=text][name=search][id=search]))+(tbody>tr>(td>input[type=button][value=Done])+(td{Todo Description})) -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Filter :</th>
+                    <th><input type="text" name="search" id="search" /></th>
+                </tr>
+            </thead>
+            <tbody id="todoListBody">
+                <tr>
+                    <td><input type="button" value="Done" /></td>
+                    <td>Todo Description</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <script>
+            const todoList = [
+                "Belajar JS Dasar",
+                "Belajar JS OOP",
+                "Belajar JS DOM",
+            ];
+
+            /**
+             * Funtion Mengosongkan Tabel Todolist Pada Browser.
+             */
+            function clearToDoList() {
+                const todoListBody = document.getElementById("todoListBody");
+
+                // Menghapus Daftar Todo pada table HTML.
+                while (todoListBody.firstChild) {
+                    todoListBody.removeChild(todoListBody.firstChild);
+                }
+            }
+
+            function addToDoList(todo) {
+                // Membuat Tag <tr>, baris tabel.
+                const tr = document.createElement("tr");
+                // Membuat Tag <td>, kolom tabel untuk buttonDone.
+                const tdButton = document.createElement("td");
+                // Menambahkan tdButton sebagai child dari tag <tr>.
+                tr.appendChild(tdButton);
+
+                // Membuat Tombol Done.
+                const buttonDone = document.createElement("input");
+                buttonDone.type = "button";
+                buttonDone.value = "Done.";
+                // Menambahkan buttonDone sebagai child dari tdButton.
+                tdButton.appendChild(buttonDone);
+
+                // Membuat Tag <td>, kolom tabel untuk isi Todo.
+                const tdTodo = document.createElement("td");
+                tdTodo.textContent = todo;
+                // Menambahkan tdTodo sebagai child dari tag <tr>.
+                tr.appendChild(tdTodo);
+
+                const todoListBody = document.getElementById("todoListBody");
+                // Menambahkan baris tabel ke todolist body.
+                todoListBody.appendChild(tr);
+            }
+
+            /**
+             * Function Menampilkan Data ke Browser dengan Tabel Todolist.
+             */
+            function displayTodolist() {
+                clearToDoList();
+
+                // Menampilkan Data Todo pada tabel HTML di browser.
+                for (let index = 0; index < todoList.length; index++) {
+                    const todo = todoList[index];
+
+                    // Input huruf pada input text box jadi lowercase.
+                    const searchText = document
+                        .getElementById("search")
+                        .value.toLowerCase();
+
+                    // Pengecekan untuk menampilkan kata yang dicari pada input text box filter.
+                    if (todo.toLowerCase().includes(searchText)) {
+                        addToDoList(todo);
+                    }
+                }
+            }
+
+            /**
+             * Untuk Input Todo.
+             */
+            document.forms["toDoForm"].onsubmit = function (event) {
+                event.preventDefault();
+
+                const todo = document.forms["toDoForm"]["todo"].value;
+                todoList.push(todo);
+
+                document.forms["toDoForm"].reset();
+
+                console.info(todoList);
+                displayTodolist();
+            };
+
+            const searchInput = document.getElementById("search");
+            /* On change terjadi ketika kursor lepas dari input text box.
+            searchInput.onchange = function () {
+                console.info("On Change");
+            }; */
+            searchInput.onkeyup = function () {
+                console.info("On key up");
+                displayTodolist();
+            };
+            searchInput.onkeydown = function () {
+                console.info("On key down");
+                displayTodolist();
+            };
+
+            displayTodolist();
+        </script>
+    </body>
+</html>
